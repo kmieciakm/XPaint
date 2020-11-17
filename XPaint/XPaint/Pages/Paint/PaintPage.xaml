@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             xmlns:tt="clr-namespace:TouchTracking.Forms;assembly=TouchTracking.Forms"
+             xmlns:local="clr-namespace:XPaint.Pages.Paint"
+             x:Class="XPaint.Pages.Paint.PaintPage" >
+
+    <!-- Styles -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Black" />
+                <Setter Property="FontSize" Value="Small" />
+                <Setter Property="TextColor" Value="WhiteSmoke" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="BorderWidth" Value="0" />
+                <Setter Property="CornerRadius" Value="0" />
+            </Style>
+            <Style x:Key="ButtonStyleRed" TargetType="Button"
+                   BasedOn="{StaticResource ButtonStyle}">
+                <Setter Property="BackgroundColor" Value="PaleVioletRed" />
+            </Style>
+            <Style x:Key="ButtonStyleBlue" TargetType="Button"
+                   BasedOn="{StaticResource ButtonStyle}">
+                <Setter Property="BackgroundColor" Value="CornflowerBlue" />
+            </Style>
+            <Style x:Key="ButtonStyleGreen" TargetType="Button"
+                   BasedOn="{StaticResource ButtonStyle}">
+                <Setter Property="BackgroundColor" Value="LawnGreen" />
+            </Style>
+            <Style x:Key="ButtonStyleYellow" TargetType="Button"
+                   BasedOn="{StaticResource ButtonStyle}">
+                <Setter Property="BackgroundColor" Value="Yellow" />
+            </Style>
+            <Style x:Key="MenuStyle" TargetType="StackLayout">
+                <Setter Property="Orientation" Value="Vertical" />
+                <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+                <Setter Property="VerticalOptions" Value="FillAndExpand" />
+                
+                <Setter Property="Spacing" Value="0" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid BackgroundColor="White">
+        <!-- Grid Definition -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnSpacing>0</Grid.ColumnSpacing>
+        <Grid.RowSpacing>0</Grid.RowSpacing>
+
+        <!-- Canvas -->
+        <skia:SKCanvasView x:Name="canvasView" Grid.Row="0" Grid.RowSpan="3"
+                           PaintSurface="OnCanvasViewPaintSurface" />
+
+        <!-- Top Panel -->
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" Grid.Row="0" Spacing="0">
+            <Button Text="Mode" Style="{StaticResource ButtonStyle}"
+                    Clicked="OnShowElement" BindingContext="{x:Reference modePanel}"/>
+            <Button Text="Color" Style="{StaticResource ButtonStyle}"
+                    Clicked="OnShowElement" BindingContext="{x:Reference colorPanel}"/>
+            <Button Text="Size" Style="{StaticResource ButtonStyle}"
+                    Clicked="OnShowElement" BindingContext="{x:Reference brushThicknessSlider}"/>
+            <Button Text="Erase" Style="{StaticResource ButtonStyle}"
+                    Clicked="OnShowElement" BindingContext="{x:Reference erasePanel}"/>
+        </StackLayout>
+
+        <!-- Menu -->
+        <StackLayout x:Name="Menu" Grid.Row="1" Style="{StaticResource MenuStyle}">
+            <!-- Drawing Modes -->
+            <StackLayout x:Name="modePanel" IsVisible="false" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="0">
+                <Button Text="Normal" Style="{StaticResource ButtonStyle}"
+                        Clicked="OnModeSelected" BindingContext="{x:Static local:DrawingModes.Normal}"/>
+                <Button Text="Blur" Style="{StaticResource ButtonStyle}"
+                        Clicked="OnModeSelected" BindingContext="{x:Static local:DrawingModes.Blur}"/>
+                <Button Text="Emboss" Style="{StaticResource ButtonStyle}"
+                        Clicked="OnModeSelected" BindingContext="{x:Static local:DrawingModes.Emboss}"/>
+            </StackLayout>
+            <!-- Path Color -->
+            <StackLayout x:Name="colorPanel" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="0">
+                <Button Text="" Style="{StaticResource ButtonStyleRed}" Clicked="OnChangeColor" />
+                <Button Text="" Style="{StaticResource ButtonStyleGreen}" Clicked="OnChangeColor" />
+                <Button Text="" Style="{StaticResource ButtonStyleBlue}" Clicked="OnChangeColor" />
+                <Button Text="" Style="{StaticResource ButtonStyleYellow}" Clicked="OnChangeColor" />
+            </StackLayout>
+            <!-- Path Thickness -->
+            <Slider x:Name="brushThicknessSlider" VerticalOptions="FillAndExpand" BackgroundColor="Black"
+                Maximum="30" Minimum="1" IsVisible="false" ValueChanged="OnBrushSizeChanged" />
+            <!-- Erase -->
+            <StackLayout x:Name="erasePanel" IsVisible="false" Orientation="Horizontal" HorizontalOptions="FillAndExpand" Spacing="0">
+                <Button Text="Eraser" Style="{StaticResource ButtonStyle}" Clicked="OnEraserSelect" />
+                <Button Text="Clear Canvas" Style="{StaticResource ButtonStyle}" Clicked="OnClearAll" />
+            </StackLayout>
+        </StackLayout>
+
+        <Grid.Effects>
+            <tt:TouchEffect Capture="True" TouchAction="OnTouchEffectAction" />
+        </Grid.Effects>
+    </Grid>
+</ContentPage>
